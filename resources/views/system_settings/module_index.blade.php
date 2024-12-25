@@ -3,11 +3,7 @@
 @section('content')
 <div class="container mt-4">
     <h4>Activate/Deactivate Modules</h4>
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+
     <form action="{{ route('modules.update') }}" method="POST">
         @csrf
         <div class="form-check">

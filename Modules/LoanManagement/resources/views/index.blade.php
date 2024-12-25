@@ -1,20 +1,13 @@
 @extends('layouts.dashboard')
 
 @section('content')
+
     <div class="container mt-4">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @elseif (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h6 class="fw-bold">All Loans</h6>
-            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createLoanModal">Create
-                Loan</button>
+            <button class="create-button btn btn-sm" data-bs-toggle="modal" data-bs-target="#createLoanModal">
+                <span class="material-icons">add</span> Add Loan
+            </button>
         </div>
         <table class="table table-striped">
             <thead>
@@ -54,7 +47,8 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h6 class="modal-title" id="editLoanModalLabel{{ $loan->id }}">Edit {{ $loan->farmer->first_name . ' ' . $loan->farmer->last_name }}'s Loan</h6>
+                                    <h6 class="modal-title" id="editLoanModalLabel{{ $loan->id }}">Edit
+                                        {{ $loan->farmer->first_name . ' ' . $loan->farmer->last_name }}'s Loan</h6>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
@@ -90,7 +84,9 @@
                                                     {{ $loan->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
                                             </select>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                        <button type="submit" class="create-button btn btn-sm">
+                                            <span class="material-icons">add</span> save changes
+                                        </button>
                                     </form>
                                 </div>
                             </div>
@@ -135,7 +131,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="repayment_duration" class="form-label">Repayment Duration (months)</label>
-                            <input type="number" class="form-control" id="repayment_duration" name="repayment_duration" required min="1">
+                            <input type="number" class="form-control" id="repayment_duration" name="repayment_duration"
+                                required min="1">
                         </div>
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
@@ -145,10 +142,15 @@
                                 <option value="rejected">Rejected</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button type="submit" class="create-button btn btn-sm">
+                            <span class="material-icons">add</span> submit
+                        </button>
+
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+
 @endsection

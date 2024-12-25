@@ -2,29 +2,29 @@
 
 @section('content')
     <div class="container mt-4">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @elseif (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
 
         <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="supports-tab" data-bs-toggle="tab" data-bs-target="#supports-tab-pane" type="button" role="tab" aria-controls="supports-tab-pane" aria-selected="true">Supported Farmers</button>
+                <button class="nav-link active" id="supports-tab" data-bs-toggle="tab" data-bs-target="#supports-tab-pane"
+                    type="button" role="tab" aria-controls="supports-tab-pane" aria-selected="true">Supported
+                    Farmers</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="products-tab" data-bs-toggle="tab" data-bs-target="#products-tab-pane" type="button" role="tab" aria-controls="products-tab-pane" aria-selected="false">Supported Product Inputs</button>
+                <button class="nav-link" id="products-tab" data-bs-toggle="tab" data-bs-target="#products-tab-pane"
+                    type="button" role="tab" aria-controls="products-tab-pane" aria-selected="false">Supported Product
+                    Inputs</button>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="supports-tab-pane" role="tabpanel" aria-labelledby="supports-tab" tabindex="0">
+            <div class="tab-pane fade show active" id="supports-tab-pane" role="tabpanel" aria-labelledby="supports-tab"
+                tabindex="0">
                 <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
                     <h6 class="fw-bold">All Farm Supports</h6>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createFarmSupportModal">Create Farm Support</button>
+                    <button class="create-button btn btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#createFarmSupportModal">
+                        <span class="material-icons">add</span> Create Farmer Support
+                    </button>
+
                 </div>
                 <table class="table table-striped">
                     <thead>
@@ -50,7 +50,8 @@
                                 <td>
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                         data-bs-target="#editFarmSupportModal{{ $support->id }}">Edit</button>
-                                    <form action="{{ route('farmsupport.destroy', $support->id) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('farmsupport.destroy', $support->id) }}" method="POST"
+                                        class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>
@@ -64,7 +65,8 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h6 class="modal-title" id="editFarmSupportModalLabel{{ $support->id }}">Edit {{ $support->name }}</h6>
+                                            <h6 class="modal-title" id="editFarmSupportModalLabel{{ $support->id }}">Edit
+                                                {{ $support->name }}</h6>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
@@ -76,28 +78,33 @@
                                                     <label for="farmer_id" class="form-label">Farmer</label>
                                                     <select name="farmer_id" class="form-control" id="farmer_id" required>
                                                         @foreach ($farmers as $farmer)
-                                                            <option value="{{ $farmer->id }}" {{ $support->farmer_id == $farmer->id ? 'selected' : '' }}>
+                                                            <option value="{{ $farmer->id }}"
+                                                                {{ $support->farmer_id == $farmer->id ? 'selected' : '' }}>
                                                                 {{ $farmer->first_name . ' ' . $farmer->last_name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                               
+
                                                 <div class="mb-3">
                                                     <label for="description" class="form-label">Description</label>
                                                     <textarea class="form-control" id="description" name="description" required>{{ $support->description }}</textarea>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="products" class="form-label">Products</label>
-                                                    <select name="products[]" id="products" class="form-control" multiple required>
+                                                    <select name="products[]" id="products" class="form-control" multiple
+                                                        required>
                                                         @foreach ($products as $product)
-                                                            <option value="{{ $product->id }}" {{ in_array($product->id, $support->products->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                            <option value="{{ $product->id }}"
+                                                                {{ in_array($product->id, $support->products->pluck('id')->toArray()) ? 'selected' : '' }}>
                                                                 {{ $product->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                                <button type="submit" class="create-button btn btn-sm">
+                                                    <span class="material-icons">save</span> save changes
+                                                </button>
                                             </form>
                                         </div>
                                     </div>
@@ -109,8 +116,10 @@
             </div>
             <div class="tab-pane fade" id="products-tab-pane" role="tabpanel" aria-labelledby="products-tab" tabindex="0">
                 <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
-                    <h6 class="fw-bold">Supported Products</h6>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createProductModal">Add Product</button>
+                    <h6 class="fw-bold">All Product Inputs</h6>
+                    <button class="create-button btn btn-sm" data-bs-toggle="modal" data-bs-target="#createProductModal">
+                        <span class="material-icons">add</span> Add Product Input
+                    </button>
                 </div>
                 <table class="table table-striped">
                     <thead>
@@ -128,7 +137,8 @@
                                 <td>
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                         data-bs-target="#editProductModal{{ $product->id }}">Edit</button>
-                                    <form action="{{ route('supported.products.destroy', $product->id) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('supported.products.destroy', $product->id) }}" method="POST"
+                                        class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>
@@ -142,20 +152,25 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h6 class="modal-title" id="editProductModalLabel{{ $product->id }}">Edit Product</h6>
+                                            <h6 class="modal-title" id="editProductModalLabel{{ $product->id }}">Edit
+                                                Product</h6>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="{{ route('supported.products.update', $product->id) }}" method="POST">
+                                            <form action="{{ route('supported.products.update', $product->id) }}"
+                                                method="POST">
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Name</label>
-                                                    <input type="text" class="form-control" id="name" name="name"
-                                                        value="{{ $product->name }}" required>
+                                                    <input type="text" class="form-control" id="name"
+                                                        name="name" value="{{ $product->name }}" required>
                                                 </div>
-                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                                <button type="submit" class="create-button btn btn-sm">
+                                                    <span class="material-icons">save</span> save changes
+                                                </button>
+
                                             </form>
                                         </div>
                                     </div>
@@ -169,7 +184,8 @@
     </div>
 
     <!-- Create Farm Support Modal -->
-    <div class="modal fade" id="createFarmSupportModal" tabindex="-1" aria-labelledby="createFarmSupportModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createFarmSupportModal" tabindex="-1" aria-labelledby="createFarmSupportModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -201,7 +217,9 @@
                                 @endforeach
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button type="submit" class="create-button btn btn-sm">
+                            <span class="material-icons">add</span> submit
+                        </button>
                     </form>
                 </div>
             </div>
@@ -209,7 +227,8 @@
     </div>
 
     <!-- Create Product Modal -->
-    <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createProductModal" tabindex="-1" aria-labelledby="createProductModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -223,7 +242,9 @@
                             <label for="name" class="form-label">Name</label>
                             <input type="text" class="form-control" id="name" name="name" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="submit" class="create-button btn btn-sm">
+                            <span class="material-icons">add</span> submit
+                        </button>
                     </form>
                 </div>
             </div>

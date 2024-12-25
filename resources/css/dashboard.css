@@ -2,7 +2,8 @@ body {
     display: flex;
     height: 100vh;
     overflow: hidden;
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-size: 0.97rem;
 }
 
 .sidebar {
@@ -55,6 +56,7 @@ body {
     flex-grow: 1;
     padding: 0;
     overflow-y: auto;
+    background-color: #e3e3e3a0;
 }
 
 .top-nav {
@@ -95,11 +97,19 @@ body {
 
 .text-white {
     box-shadow: 0px 10px 10px -5px rgba(69, 69, 69, 0.421);
-  }
+    transition: all 0.3s ease;
+}
+
+.text-white:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+    box-shadow: 0px 10px 10px -5px rgba(69, 69, 69, 0.521);
+    cursor: pointer;
+}
 
 .text-white .card-title {
-    color: rgb(255, 255, 255);
-    font-size: 1.1rem;
+    color: rgb(247, 247, 247);
+    font-size: 0.97rem;
 }
 .text-white .card-text {
     color: rgb(255, 255, 255);
@@ -114,10 +124,64 @@ body {
     align-items: center;
 }
 
-.dashboard-table{
-    
+.text-white:hover .card-text {
+    color: rgb(255, 255, 255);
+    font-size: 1.1rem;
+    border: 2px solid rgb(140, 255, 114);
+    border-radius: 50%;
+}
+
+.dashboard-table {
     width: 100%;
     border-collapse: collapse;
     box-shadow: 0 3px 9px rgba(17, 167, 0, 0.152);
     border-top: 1px solid #7ca87e76;
 }
+
+.farmers-header {
+    background: linear-gradient(45deg, #36a51a3e, #91d09121);
+    color: rgba(22, 22, 22, 0.799);
+    padding: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.create-button {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(45deg, #36a51a3e, #91d09121);
+    color: rgba(22, 22, 22, 0.799);
+    padding: 3px;
+    font-size: 1.1rem;
+    border: 1px solid #22ff0076;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.create-button .material-icons {
+    color: rgb(77, 124, 55);
+}
+.create-button:hover {
+    background: linear-gradient(45deg, #36a51a3e, #91d09121);
+    color: rgba(45, 45, 45, 0.799);
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-header {
+    background: linear-gradient(45deg, #36a51a3e, #91d09121);
+    color: rgba(22, 22, 22, 0.799);
+    padding: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.table-striped th {
+    background: rgba(146, 201, 155, 0.174);
+    border: 1px solid #7ca87e76;
+    color: rgba(22, 22, 22, 0.799);
+    font-size: 1rem;
+    font-weight: lighter;
+    border-bottom: 2px solid #7ca87e76;
+}
+
