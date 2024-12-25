@@ -1,0 +1,123 @@
+body {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif;
+}
+
+.sidebar {
+    width: 250px;
+    background: linear-gradient(250deg, #7ca87e, #25812a);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.sidebar .company-name {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.sidebar .nav-link {
+    color: white;
+    margin: 5px 0;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.sidebar .nav-link .material-icons {
+    margin-right: 10px;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 0;
+    overflow-y: auto;
+}
+
+.top-nav {
+    background-color: #def6dd;
+    padding: 20px 20px 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: bottom;
+    border-bottom: 1px solid #dee2e6;
+    box-shadow: 0 3px 9px rgba(17, 167, 0, 0.1);
+}
+
+.top-nav div {
+    display: flex;
+    align-items: center;
+}
+
+.top-nav .btn {
+    margin-left: 10px;
+}
+
+/* dashboard summeries */
+.card-dashboard1 {
+    background: linear-gradient(45deg, #36a51ae9, #95d895);
+}
+
+.card-dashboard2 {
+    background: linear-gradient(45deg, #63864e, #c0d998);
+}
+
+.card-dashboard3 {
+    background: linear-gradient(45deg, #8a722b, #cab983);
+}
+
+.card-dashboard4 {
+    background: linear-gradient(45deg, #4e4e4e, #bcc1c1);
+}
+
+.text-white {
+    box-shadow: 0px 10px 10px -5px rgba(69, 69, 69, 0.421);
+  }
+
+.text-white .card-title {
+    color: rgb(255, 255, 255);
+    font-size: 1.1rem;
+}
+.text-white .card-text {
+    color: rgb(255, 255, 255);
+    font-size: 1.1rem;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    border: 2px solid rgb(238, 238, 238);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard-table{
+    
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 3px 9px rgba(17, 167, 0, 0.152);
+    border-top: 1px solid #7ca87e76;
+}
