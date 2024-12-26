@@ -1,7 +1,6 @@
 @extends('layouts.dashboard')
 
 @section('content')
-
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h6 class="fw-bold">All Loans</h6>
@@ -11,13 +10,15 @@
         </div>
         <table class="table table-striped">
             <thead>
-                <tr>
+                <tr>m
                     <th>ID</th>
                     <th>Farmer Name</th>
                     <th>Amount</th>
                     <th>Interest Rate</th>
                     <th>Repayment Duration</th>
-                    <th>Status</th>
+                    <th>Application Status</th>
+                    <th>Loan Status</th>
+
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -29,15 +30,60 @@
                         <td>{{ $loan->amount }}</td>
                         <td>{{ $loan->interest_rate }}</td>
                         <td>{{ $loan->repayment_duration }}</td>
-                        <td>{{ $loan->status }}</td>
+                        <td>{{ $loan->application_status }}</td>
                         <td>
-                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                data-bs-target="#editLoanModal{{ $loan->id }}">Edit</button>
-                            <form action="{{ route('loanmanagement.destroy', $loan->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
+                            @if (!($loan->application_status !== 'approved'))
+                                {{ $loan->loan_status }}
+                            @else
+                                --
+                            @endif
+                        </td>
+                        <td>
+                            <!-- Show Approve button only if the loan is not approved -->
+                            @if ($loan->application_status !== 'approved')
+                                <form action="{{ route('loanmanagement.approve', $loan->id) }}" method="POST"
+                                    class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-success"
+                                        onclick="confirmAction(event, 'Loan', 'approve')">Approve</button>
+                                </form>
+                            @endif
+
+                            <!-- Show Reject button only if the loan is pending -->
+                            @if ($loan->application_status === 'pending')
+                                <form action="{{ route('loanmanagement.reject', $loan->id) }}" method="POST"
+                                    class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-warning"
+                                        onclick="confirmAction(event, 'Loan', 'reject')">Reject</button>
+                                </form>
+                            @endif
+
+                            <!-- Show Repaid button only if the loan is approved and not repaid -->
+                            @if ($loan->application_status === 'approved' && $loan->loan_status !== 'repaid')
+                                <form action="{{ route('loanmanagement.repaid', $loan->id) }}" method="POST"
+                                    class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-primary"
+                                        onclick="confirmAction(event, 'Loan', 'repay')">Repay</button>
+                                </form>
+                            @endif
+
+                            @if ($loan->application_status === 'pending')
+                                <!-- Edit button (always visible) -->
+                                <button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                    data-bs-target="#editLoanModal{{ $loan->id }}">Edit</button>
+                                {{-- delete --}}
+                                <form action="{{ route('loanmanagement.destroy', $loan->id) }}" method="POST"
+                                    class="d-inline">
+                                    @method('DELETE')
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                        onclick="confirmAction(event, 'Loan', 'delete')">Delete</button>
+                                </form>
+                            @endif
+                        </td>
+
                         </td>
                     </tr>
 
@@ -72,17 +118,6 @@
                                             <input type="number" class="form-control" id="repayment_duration"
                                                 name="repayment_duration" value="{{ $loan->repayment_duration }}" required
                                                 min="1">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="status" class="form-label">Status</label>
-                                            <select class="form-control" id="status" name="status" required>
-                                                <option value="approved"
-                                                    {{ $loan->status == 'approved' ? 'selected' : '' }}>Approved</option>
-                                                <option value="pending" {{ $loan->status == 'pending' ? 'selected' : '' }}>
-                                                    Pending</option>
-                                                <option value="rejected"
-                                                    {{ $loan->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                                            </select>
                                         </div>
                                         <button type="submit" class="create-button btn btn-sm">
                                             <span class="material-icons">add</span> save changes
@@ -134,23 +169,50 @@
                             <input type="number" class="form-control" id="repayment_duration" name="repayment_duration"
                                 required min="1">
                         </div>
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status</label>
-                            <select class="form-control" id="status" name="status" required>
-                                <option value="approved">Approved</option>
-                                <option value="pending">Pending</option>
-                                <option value="rejected">Rejected</option>
-                            </select>
-                        </div>
                         <button type="submit" class="create-button btn btn-sm">
-                            <span class="material-icons">add</span> submit
+                            <span class="material-icons">add</span> Submit
                         </button>
-
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
 
-
+    <script>
+        function confirmAction(event, module, action) {
+            event.preventDefault();
+            let confirmationText = '';
+            switch (action) {
+                case 'approve':
+                    confirmationText = `Do you want to approve the ${module} loan?`;
+                    break;
+                case 'reject':
+                    confirmationText = `Do you want to reject the ${module} loan?`;
+                    break;
+                case 'repay':
+                    confirmationText = `Do you want to mark the ${module} loan as repaid?`;
+                    break;
+                case 'delete':
+                    confirmationText = `Do you want to delete the ${module} loan?`;
+                    break;
+                default:
+                    confirmationText = `Do you want to perform the ${action} action on the ${module} loan?`;
+                    break;
+            }
+            Swal.fire({
+                title: 'Are you sure?',
+                text: confirmationText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, do it!',
+                cancelButtonText: 'No, cancel',
+                heightAuto: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = event.target.closest('form').action;
+                }
+            });
+        }
+    </script>
 @endsection

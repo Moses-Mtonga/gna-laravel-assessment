@@ -19,7 +19,8 @@ class Loan extends Model
         'amount',
         'interest_rate',
         'repayment_duration',
-        'status',
+        'application_status',
+        'loan_status',
     ];
 
     // protected static function newFactory(): LoanFactory

@@ -57,7 +57,7 @@
                         $tabNames = [
                             'dashboard' => 'Dashboard',
                             'farmers.index' => 'Farmers',
-                            'loans.index' => 'Loans',
+                            'loanmanagement.index' => 'Loan Management',
                             'modules.index' => 'Module Management',
                             'farmsupport.index' => 'Farmer Support',
                         ];

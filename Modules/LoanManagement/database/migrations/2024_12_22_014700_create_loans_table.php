@@ -17,12 +17,12 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->decimal('interest_rate', 5, 2);
             $table->integer('repayment_duration');
-            $table->enum('status', ['approved', 'pending', 'rejected'])->default('pending');
+            $table->enum('application_status', ['approved', 'pending', 'rejected'])->nullable();
+            $table->enum('loan_status', ['repaid', 'not repaid'])->nullable();
             $table->timestamps();
 
             $table->foreign('farmer_id')->references('id')->on('farmers')->onDelete('cascade');
         });
-
     }
 
     /**
