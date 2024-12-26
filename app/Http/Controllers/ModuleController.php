@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
+use ZipArchive;
 
 class ModuleController extends Controller
 {
@@ -59,7 +59,7 @@ class ModuleController extends Controller
         // If need be, we remove module files
         // File::deleteDirectory(base_path('Modules/' . $moduleName));
 
-        return redirect()->route('modules.index')->with('success', 'Module unstalled successfully.');
+        return redirect()->route('modules.index')->with('success', 'Module uninstalled successfully.');
     }
 
     // updating modules
@@ -75,6 +75,44 @@ class ModuleController extends Controller
         File::put(base_path('modules_statuses.json'), json_encode($allModules, JSON_PRETTY_PRINT));
 
         return redirect()->route('modules.index')->with('success', 'Modules updated successfully.');
+    }
+
+    public function uploadNewModule(Request $request)
+    {
+        $request->validate([
+            'moduleZip' => 'required|mimes:zip'
+        ]);
+
+        $file = $request->file('moduleZip');
+        $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $destinationPath = base_path('Modules');
+
+        // Check if the module name already exists
+        $modules = json_decode(File::get(base_path('modules_statuses.json')), true);
+        // if (array_key_exists($fileName, $modules)) {
+        //     return redirect()->route('modules.index')->with('error', 'Module with this name already exists. Please check if this Module does not already exist in the system!');
+        // }
+
+        // Move the uploaded file to the Modules directory
+        $file->move($destinationPath, $file->getClientOriginalName());
+
+        // lets now extract the zip file
+        $zip = new ZipArchive;
+        if ($zip->open($destinationPath . '/' . $file->getClientOriginalName()) === TRUE) {
+            $zip->extractTo($destinationPath);
+            $zip->close();
+
+            // Delete the uploaded zip file
+            File::delete($destinationPath . '/' . $file->getClientOriginalName());
+
+            // Register the new module in the modules_statuses.json file
+            $modules[$fileName] = false;
+            File::put(base_path('modules_statuses.json'), json_encode($modules, JSON_PRETTY_PRINT));
+
+            return redirect()->route('modules.index')->with('success', 'Module uploaded and installed successfully.');
+        } else {
+            return redirect()->route('modules.index')->with('error', 'Failed to extract the module.');
+        }
     }
 
     public function isModuleInstalled($moduleName)

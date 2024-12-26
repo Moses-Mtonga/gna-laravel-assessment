@@ -44,7 +44,7 @@
 
             <a class="nav-link {{ request()->routeIs('modules.index') ? 'active' : '' }}"
                 href="{{ route('modules.index') }}">
-                <span class="material-icons">settings</span> Settings
+                <span class="material-icons">settings</span> Module Management
             </a>
         </nav>
     </div>
@@ -58,7 +58,7 @@
                             'dashboard' => 'Dashboard',
                             'farmers.index' => 'Farmers',
                             'loans.index' => 'Loans',
-                            'modules.index' => 'Settings',
+                            'modules.index' => 'Module Management',
                             'farmsupport.index' => 'Farmer Support',
                         ];
                     @endphp
@@ -71,37 +71,40 @@
             </div>
         </div>
         <div class="content">
-            <div class="container mt-4">
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
-                @if (session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-            </div>
             @yield('content')
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    {{-- lets remove the alart --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Auto-dismiss alerts after 5 seconds
-            setTimeout(function() {
-                let alerts = document.querySelectorAll('.alert');
-                alerts.forEach(function(alert) {
-                    let bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: '{{ session('success') }}',
+                    position: 'top-end',
+                    toast: true,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    heightAuto: false
                 });
-            }, 5000);
+            @endif
+
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '{{ session('error') }}',
+                    position: 'top-end',
+                    toast: true,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    heightAuto: false
+                });
+            @endif
         });
     </script>
 </body>

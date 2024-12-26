@@ -17,6 +17,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/modules', [ModuleController::class, 'update'])->name('modules.update');
     Route::get('/modules/install/{module}', [ModuleController::class, 'install'])->name('modules.install');
     Route::get('/modules/delete/{module}', [ModuleController::class, 'delete'])->name('modules.delete');
+    Route::post('/modules/upload', [ModuleController::class, 'uploadNewModule'])->name('modules.upload');
 });
 
 Auth::routes();
