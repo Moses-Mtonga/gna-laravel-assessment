@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -6,6 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use ZipArchive;
+use Exception;
 
 class ModuleController extends Controller
 {
@@ -45,19 +47,23 @@ class ModuleController extends Controller
 
     public function delete($moduleName)
     {
-        // Deactivate the module
+        // Load the modules statuses  
         $modules = json_decode(File::get(base_path('modules_statuses.json')), true);
-        $modules[$moduleName] = false;
+
+        // Remove the module entry  
+        unset($modules[$moduleName]);
+
+        // Save the updated statuses  
         File::put(base_path('modules_statuses.json'), json_encode($modules, JSON_PRETTY_PRINT));
 
         // delete data
         // Rollback module migrations
-        Artisan::call('module:migrate-rollback', [
-            'module' => $moduleName,
-        ]);
+        // Artisan::call('module:migrate-rollback', [
+        //     'module' => $moduleName,
+        // ]);
 
         // If need be, we remove module files
-        // File::deleteDirectory(base_path('Modules/' . $moduleName));
+        File::deleteDirectory(base_path('Modules/' . $moduleName));
 
         return redirect()->route('modules.index')->with('success', 'Module uninstalled successfully.');
     }
@@ -74,6 +80,20 @@ class ModuleController extends Controller
         // lets update module status files as per the request
         File::put(base_path('modules_statuses.json'), json_encode($allModules, JSON_PRETTY_PRINT));
 
+        // Ensure the bootstrap/cache directory exists and is writable
+        $bootstrapCachePath = base_path('bootstrap/cache');
+        if (!File::exists($bootstrapCachePath)) {
+            File::makeDirectory($bootstrapCachePath, 0755, true);
+        }
+
+        // Clear bootstrap cache content except the cache folder
+        $files = File::files($bootstrapCachePath);
+        foreach ($files as $file) {
+            if ($file->getFilename() !== '.gitignore') {
+                File::delete($file);
+            }
+        }
+
         return redirect()->route('modules.index')->with('success', 'Modules updated successfully.');
     }
 
@@ -85,33 +105,46 @@ class ModuleController extends Controller
 
         $file = $request->file('moduleZip');
         $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $destinationPath = base_path('Modules');
+        $modulePath = base_path('Modules/' . $fileName);
 
         // Check if the module name already exists
         $modules = json_decode(File::get(base_path('modules_statuses.json')), true);
-        // if (array_key_exists($fileName, $modules)) {
-        //     return redirect()->route('modules.index')->with('error', 'Module with this name already exists. Please check if this Module does not already exist in the system!');
-        // }
+        if (array_key_exists($fileName, $modules)) {
+            return redirect()->route('modules.index')->with('error', 'Module with this name already exists.');
+        }
 
-        // Move the uploaded file to the Modules directory
-        $file->move($destinationPath, $file->getClientOriginalName());
+        try {
+            // Create the module directory
+            if (!File::exists($modulePath)) {
+                File::makeDirectory($modulePath, 0755, true);
+            }
 
-        // lets now extract the zip file
-        $zip = new ZipArchive;
-        if ($zip->open($destinationPath . '/' . $file->getClientOriginalName()) === TRUE) {
-            $zip->extractTo($destinationPath);
-            $zip->close();
+            // Move the uploaded file to the module directory
+            $file->move($modulePath, $file->getClientOriginalName());
 
-            // Delete the uploaded zip file
-            File::delete($destinationPath . '/' . $file->getClientOriginalName());
+            // lets now extract the zip file
+            $zip = new ZipArchive;
+            if ($zip->open($modulePath . '/' . $file->getClientOriginalName()) === TRUE) {
+                $zip->extractTo($modulePath);
+                $zip->close();
 
-            // Register the new module in the modules_statuses.json file
-            $modules[$fileName] = false;
-            File::put(base_path('modules_statuses.json'), json_encode($modules, JSON_PRETTY_PRINT));
+                // Delete the uploaded zip file
+                File::delete($modulePath . '/' . $file->getClientOriginalName());
 
-            return redirect()->route('modules.index')->with('success', 'Module uploaded and installed successfully.');
-        } else {
-            return redirect()->route('modules.index')->with('error', 'Failed to extract the module.');
+                // Register the new module in the modules_statuses.json file
+                $modules[$fileName] = false;
+                File::put(base_path('modules_statuses.json'), json_encode($modules, JSON_PRETTY_PRINT));
+
+                // Wait for a about seconds to ensure composer dump-autoload completes
+                sleep(5);
+
+                return redirect()->route('modules.index')->with('success', 'Module uploaded successfully. Please install it to use it');
+            } else {
+                throw new Exception('Failed to extract the module.');
+            }
+        } catch (Exception $e) {
+            // Handle any errors that occur during the process
+            return redirect()->route('modules.index')->with('error', $e->getMessage());
         }
     }
 
