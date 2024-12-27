@@ -77,6 +77,9 @@ Clone the repository:
     php artisan module:migrate FarmSupport //migrates Farm Support module tables
     php artisan module:see FarmSupport // runs seeders for farm support inputs table
 
+    npm run build //build and apply css custom styling to views
+    php artisan serve //access the local host site of the system
+
 To log in, use the migrated user credetials below
 username: adminuser@gna.com
 password: password
