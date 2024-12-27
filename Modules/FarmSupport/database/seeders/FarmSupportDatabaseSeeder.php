@@ -3,6 +3,7 @@
 namespace Modules\FarmSupport\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Modules\FarmSupport\Models\SupportedProduct;
 
 class FarmSupportDatabaseSeeder extends Seeder
 {
@@ -11,6 +12,23 @@ class FarmSupportDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->call([]);
+
+        // Create supported products  
+        $products = [
+            [
+                'name' => 'Seeds',
+            ],
+            [
+                'name' => 'Fertilizers',
+            ],
+            [
+                'name' => 'Pesticides',
+            ],
+        ];
+
+        // Insert supported products into the database  
+        foreach ($products as $product) {
+            SupportedProduct::create($product);
+        }
     }
 }

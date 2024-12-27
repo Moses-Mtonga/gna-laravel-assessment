@@ -58,9 +58,9 @@ class ModuleController extends Controller
 
         // delete data
         // Rollback module migrations
-        // Artisan::call('module:migrate-rollback', [
-        //     'module' => $moduleName,
-        // ]);
+        Artisan::call('module:migrate-rollback', [
+            'module' => $moduleName,
+        ]);
 
         // If need be, we remove module files
         File::deleteDirectory(base_path('Modules/' . $moduleName));

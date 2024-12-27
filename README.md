@@ -1,66 +1,82 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Farmer Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This Laravel application is a Farmer Management System built with a modular architecture. It allows administrators to manage farmers, loans, and optionally, farming-related activities. The system supports dynamic module installation, activation, deactivation, and deletion for scalable and maintainable feature expansion.
 
-## About Laravel
+Modular Architecture
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The system utilizes a modular architecture where each feature (e.g., Loan Management, Farm Support) is implemented as a separate module. Each module has its own:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Routes
+Controllers
+Views
+Models
+Migrations
+This modular approach promotes code organization, reusability, and easier maintenance.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Module Installation and Management
 
-## Learning Laravel
+The system provides functionalities to manage modules through the module management tab of the UI sidebar. Here's a breakdown of the functionalities:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Installation: New modules zip file can be uploaded into the system using the upload module feature. newly uploaded
+modules need to be activated to be recognized by the system
+Activation: Uploaded modules can be activated or deactivated. Activated modules have their functionalities loaded, while deactivated modules remain inactive without affecting existing data.
+Deletion: Deactivated modules can be removed or uninstalled from the system, clearing its DB records and system files
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Module can also be installed through manaully adding module files in the module folder under that module name. After this, there is need to activate the module by entering a module entry record, adding module name and status in the modules_statuses.json. After this, there is need to migrate module table to the database by running php artisan module:migrate <Migration_Name> 
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+Core functionalities:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Admin Dashboard:
 
-### Premium Partners
+View a list of all registered farmers with details like name and phone number.
+Add new farmers with their basic information.
+Monitor loan statuses (approved, pending, rejected).
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Installed Modules
 
-## Contributing
+Loan Management Module 
+Supports creation of loans for specific farmers, specifying loan amount, interest rate, and repayment duration.
+Allows user to Approve or reject loan applications. Approved loans can be marked as paid or not paid
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Farm Support Module
 
-## Code of Conduct
+Supports assigning farming inputs (seeds, fertilizers, pesticides) to farmers.
+and tracks farmer distributed inputs.
+View summaries of inputs allocated to each farmer.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+The system includes seeders for:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Farmers: Populates 5 dummy farmers table with sample farmer data.
+Farmer Support Inputs: Populates a table with sample farming input data (seeds, fertilizers, etc.) if the Farm Support Module is included.
 
-## License
+Reporting 
+The system shows a variety of simple report analytics in the admin dashboard. Some of these are 
+Total number of loans.
+Total loan amount disbursed.
+Loans grouped by status (approved, pending, rejected).
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Frontend Design
+The Farmer Management System utilizes responsive design principles to ensure a user-friendly experience across different devices. You can customize the UI further using Bootstrap.
+
+
+
+To Run the system on your machine
+
+Clone the repository:
+
+1. git clone https://github.com/Moses-Mtonga/gna-laravel-assessment.git
+2. Install dependencies: composer install
+3. Configure your database connection in the .env file.
+
+3. Run database migrations: 
+    php artisan migrate //migrates the main system feature, farmers table
+    php artisan db:seed //creates admin user account and adds dummy farmers to the farmers tables
+    php artisan module:migrate LoanManagement //migrates Loan Management module table
+    php artisan module:migrate FarmSupport //migrates Farm Support module tables
+    php artisan module:see FarmSupport // runs seeders for farm support inputs table
+
+To log in, use the migrated user credetials below
+username: adminuser@gna.com
+password: password
