@@ -25,7 +25,7 @@
             <tbody>
                 @foreach ($loans as $loan)
                     <tr>
-                        <td>{{ $loan->id }}</td>
+                        <td>{{ $loop->iteration }}</td> 
                         <td>{{ $loan->farmer->first_name . ' ' . $loan->farmer->last_name ?? '' }}</td>
                         <td>{{ $loan->amount }}</td>
                         <td>{{ $loan->interest_rate }}</td>
@@ -129,7 +129,9 @@
                     </div>
                 @endforeach
             </tbody>
+            
         </table>
+        {{ $loans->links('pagination::bootstrap-5') }}
     </div>
 
     <!-- Create Loan Modal -->

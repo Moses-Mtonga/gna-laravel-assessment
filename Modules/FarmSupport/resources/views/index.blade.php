@@ -39,7 +39,7 @@
                     <tbody>
                         @foreach ($supports as $support)
                             <tr>
-                                <td>{{ $support->id }}</td>
+                                <td>{{ $loop->iteration }}</td> 
                                 <td>{{ $support->farmer->first_name . ' ' . $support->farmer->last_name ?? '' }}</td>
                                 <td>{{ $support->description }}</td>
                                 <td>
@@ -132,7 +132,7 @@
                     <tbody>
                         @foreach ($products as $product)
                             <tr>
-                                <td>{{ $product->id }}</td>
+                                <td>{{ $loop->iteration }}</td> 
                                 <td>{{ $product->name }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"

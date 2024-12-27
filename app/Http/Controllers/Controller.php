@@ -16,12 +16,33 @@ class Controller extends BaseController
 
     public function index()
     {
-        $totalFarmers = Farmer::count();
-        $totalFarmersWithLoans = Loan::distinct('farmer_id')->count('farmer_id');
-        $totalFarmSupportedFarmers = FarmSupport::distinct('farmer_id')->count('farmer_id');
-        $totalSupportedProducts = SupportedProduct::count();
-        $farmers = Farmer::all();
+        $activeModules = app('getActiveModules')();
 
-        return view('dashboard', compact('totalFarmers', 'totalFarmersWithLoans', 'totalFarmSupportedFarmers', 'totalSupportedProducts', 'farmers'));
+        $totalFarmers = Farmer::count();
+        $farmers = Farmer::paginate(10); 
+
+        // lets create a new array to hold loan data, if loan module is actually active
+        $loanData = [];
+
+        // check if the loan module is active and add data if it is
+        if (isset($activeModules['LoanManagement'])) {
+            $totalFarmersWithLoans = Loan::distinct('farmer_id')->count('farmer_id');
+            $totalLoans = Loan::count();
+            $totalLoanAmount = Loan::where('application_status', 'approved')->sum('amount');
+            $approvedLoans = Loan::where('application_status', 'approved')->count();
+            $pendingLoans = Loan::where('application_status', 'pending')->count();
+            $rejectedLoans = Loan::where('application_status', 'rejected')->count();
+
+            $loanData = [
+                'totalFarmersWithLoans' => $totalFarmersWithLoans,
+                'totalLoans' => $totalLoans,
+                'totalLoanAmount' => $totalLoanAmount,
+                'approvedLoans' => $approvedLoans,
+                'pendingLoans' => $pendingLoans,
+                'rejectedLoans' => $rejectedLoans,
+            ];
+        }
+
+        return view('dashboard', compact('totalFarmers', 'loanData', 'farmers'));
     }
 }

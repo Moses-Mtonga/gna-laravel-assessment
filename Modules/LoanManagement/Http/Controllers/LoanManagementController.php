@@ -15,7 +15,7 @@ class LoanManagementController extends Controller
      */
     public function index()
     {
-        $loans = Loan::with('farmer')->get();
+        $loans = Loan::with('farmer')->paginate(10);
         $farmers = Farmer::all();
         return view('loanmanagement::index', compact('loans', 'farmers'));
     }
