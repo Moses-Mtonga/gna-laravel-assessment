@@ -1,4 +1,4 @@
-Farmer Management System
+Farmer Management System user guide
 
 This Laravel application is a Farmer Management System built with a modular architecture. It allows administrators to manage farmers, loans, and optionally, farming-related activities. The system supports dynamic module installation, activation, deactivation, and deletion for scalable and maintainable feature expansion.
 
@@ -17,7 +17,7 @@ Module Installation and Management
 
 The system provides functionalities to manage modules through the module management tab of the UI sidebar. Here's a breakdown of the functionalities:
 
-Installation: New modules zip file can be uploaded into the system using the upload module feature. newly uploaded
+Installation: New module's zip file can be uploaded into the system using the upload module feature. newly uploaded
 modules need to be activated to be recognized by the system
 Activation: Uploaded modules can be activated or deactivated. Activated modules have their functionalities loaded, while deactivated modules remain inactive without affecting existing data.
 Deletion: Deactivated modules can be removed or uninstalled from the system, clearing its DB records and system files
@@ -37,13 +37,22 @@ Installed Modules
 
 Loan Management Module 
 Supports creation of loans for specific farmers, specifying loan amount, interest rate, and repayment duration.
-Allows user to Approve or reject loan applications. Approved loans can be marked as paid or not paid
+Allows user to Approve or reject loan applications. Approved loans can be marked as paid or not paid.
+Access the zip file for this module in the 
+Project Root Directory\storage\module zip files\LoanManagement.zip and install it either manually
+or using the upload module feature. Ensure module is 
+deleted before you install it
+
 
 Farm Support Module
 
 Supports assigning farming inputs (seeds, fertilizers, pesticides) to farmers.
 and tracks farmer distributed inputs.
 View summaries of inputs allocated to each farmer.
+Access the zip file for this module in the 
+Project Root Directory\storage\module zip files\FarmSupport.zip and install it either manually
+or using the upload module feature. Ensure module is 
+deleted before you install it
 
 
 The system includes seeders for:
@@ -62,7 +71,12 @@ The Farmer Management System utilizes responsive design principles to ensure a u
 
 
 
-To Run the system on your machine
+To Run the system:
+Ensure you have the following installed on your machine
+1. php 8.2^ // for running a php project
+2. Node.js 16^ // for frontend js package support using npm
+3. composer //install it globally to manage php packages
+
 
 Clone the repository:
 
@@ -70,7 +84,7 @@ Clone the repository:
 2. Install dependencies: composer install
 3. Configure your database connection in the .env file.
 
-3. Run database migrations: 
+3. Run the following commands in terminal of the project root directory: 
     php artisan migrate //migrates the main system feature, farmers table
     php artisan db:seed //creates admin user account and adds dummy farmers to the farmers tables
     php artisan module:migrate LoanManagement //migrates Loan Management module table
@@ -78,7 +92,8 @@ Clone the repository:
     php artisan module:see FarmSupport // runs seeders for farm support inputs table
 
     npm run build //build and apply css custom styling to views
-    php artisan serve //access the local host site of the system
+    php artisan key:generate //generate an application key if the .env file does not have one
+    php artisan serve //run the project and then access its local host site on http://127.0.0.1:8000/
 
 To log in, use the migrated user credetials below
 username: adminuser@gna.com

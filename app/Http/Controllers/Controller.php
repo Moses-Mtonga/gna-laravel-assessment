@@ -19,7 +19,7 @@ class Controller extends BaseController
         $activeModules = app('getActiveModules')();
 
         $totalFarmers = Farmer::count();
-        $farmers = Farmer::paginate(10); 
+        $farmers = Farmer::paginate(10);
 
         // lets create a new array to hold loan data, if loan module is actually active
         $loanData = [];
