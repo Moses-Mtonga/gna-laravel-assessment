@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Farmer;
@@ -12,6 +13,7 @@ class FarmerController extends Controller
         return view('dashboard', compact('farmers'));
     }
 
+    // Handle an incoming farmer creation request.
     public function store(Request $request)
     {
         $request->validate([
@@ -29,6 +31,7 @@ class FarmerController extends Controller
         }
     }
 
+    //Handle an incoming farmer update request.
     public function update(Request $request, Farmer $farmer)
     {
         $request->validate([

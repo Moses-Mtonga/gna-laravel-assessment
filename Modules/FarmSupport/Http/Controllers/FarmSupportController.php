@@ -10,6 +10,7 @@ use Modules\FarmSupport\Models\SupportedProduct;
 
 class FarmSupportController extends Controller
 {
+    //Show the list of Farm Supports and all farmers for farmer support creation
     public function index()
     {
         $farmers = Farmer::all();
@@ -18,6 +19,7 @@ class FarmSupportController extends Controller
         return view('farmsupport::index', compact('supports', 'farmers', 'products'));
     }
 
+    //Show the form for creating a new farm support.
     public function create()
     {
         $farmers = Farmer::all();
@@ -25,6 +27,13 @@ class FarmSupportController extends Controller
         return view('farmsupport::create', compact('farmers', 'products'));
     }
 
+    /**
+     * Store a newly created farm support in storage.
+     *
+     * Validates the request data, creates a new FarmSupport record with the
+     * provided farmer ID, description, and associated products, and redirects
+     * back with a success message.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -40,10 +49,14 @@ class FarmSupportController extends Controller
         return redirect()->route('farmsupport.index')->with('success', 'Support created successfully.');
     }
 
+
     /**
-     * Store a newly created supported product in storage.
+     * Store a newly created product in storage.
+     *
+     * Validates the request data, creates a new SupportedProduct record with the
+     * provided name, and redirects back with a success message.
      */
-    public function storeProduct(Request $request)
+    public function storeProducts(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -53,12 +66,6 @@ class FarmSupportController extends Controller
             'name' => $request->input('name')
         ]);
         return redirect()->route('farmsupport.index')->with('success', 'Product added successfully.');
-    }
-
-    public function show($id)
-    {
-        $support = FarmSupport::with('farmer', 'products')->findOrFail($id);
-        return view('farmsupport::show', compact('support'));
     }
 
     public function edit($id)

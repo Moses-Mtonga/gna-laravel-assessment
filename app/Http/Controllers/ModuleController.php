@@ -11,12 +11,12 @@ use Exception;
 
 class ModuleController extends Controller
 {
-    // module listing modules
+    // module listing function
     public function index()
     {
         $modules = json_decode(File::get(base_path('modules_statuses.json')), true);
         $moduleStatuses = [];
-
+        // check if the module is installed, if it is, we can activate it in the view
         foreach ($modules as $module => $status) {
             $moduleStatuses[$module] = [
                 'active' => $status,
@@ -24,36 +24,60 @@ class ModuleController extends Controller
             ];
         }
 
+
         return view('system_settings.module_index', compact('moduleStatuses'));
     }
 
     public function install($moduleName)
     {
+        // dd($moduleName);
         // Lets activate the module
         $modules = json_decode(File::get(base_path('modules_statuses.json')), true);
         $modules[$moduleName] = true;
         File::put(base_path('modules_statuses.json'), json_encode($modules, JSON_PRETTY_PRINT));
+
+        // Ensure Rolling back module migrations
+        Artisan::call('module:migrate-rollback', [
+            'module' => $moduleName,
+        ]);
 
         // Run module migrations
         Artisan::call('module:migrate', [
             'module' => $moduleName,
         ]);
 
+
+        // Ensure the bootstrap/cache directory exists and is writable
+        $bootstrapCachePath = base_path('bootstrap/cache');
+
+        // Create the bootstrap cache directory if it does not exist
+        if (!File::exists($bootstrapCachePath)) {
+            File::makeDirectory($bootstrapCachePath, 0755, true);
+        }
+
+        // Clear bootstrap cache content except the cache folder
+        $files = File::files($bootstrapCachePath);
+        foreach ($files as $file) {
+            if ($file->getFilename() !== '.gitignore') {
+                File::delete($file);
+            }
+        }
+
         // lets clear out residual cache and optimize the application
-        Artisan::call('optimize');
+        // Artisan::call('optimize');
 
         return redirect()->route('modules.index')->with('success', 'Module installed successfully.');
     }
 
     public function delete($moduleName)
     {
-        // Load the modules statuses  
+        // Load the modules statuses
         $modules = json_decode(File::get(base_path('modules_statuses.json')), true);
 
-        // Remove the module entry  
+        // Remove the module entry
         unset($modules[$moduleName]);
 
-        // Save the updated statuses  
+        // Save the updated statuses
         File::put(base_path('modules_statuses.json'), json_encode($modules, JSON_PRETTY_PRINT));
 
         // delete data
@@ -64,6 +88,22 @@ class ModuleController extends Controller
 
         // If need be, we remove module files
         File::deleteDirectory(base_path('Modules/' . $moduleName));
+
+        // Ensure the bootstrap/cache directory exists and is writable
+        $bootstrapCachePath = base_path('bootstrap/cache');
+
+        // Create the bootstrap cache directory if it does not exist
+        if (!File::exists($bootstrapCachePath)) {
+            File::makeDirectory($bootstrapCachePath, 0755, true);
+        }
+
+        // Clear bootstrap cache content except the cache folder
+        $files = File::files($bootstrapCachePath);
+        foreach ($files as $file) {
+            if ($file->getFilename() !== '.gitignore') {
+                File::delete($file);
+            }
+        }
 
         return redirect()->route('modules.index')->with('success', 'Module uninstalled successfully.');
     }
@@ -77,11 +117,13 @@ class ModuleController extends Controller
         foreach ($allModules as $module => $status) {
             $allModules[$module] = in_array($module, $modules);
         }
-        // lets update module status files as per the request
+        // lets update module status file as per the request
         File::put(base_path('modules_statuses.json'), json_encode($allModules, JSON_PRETTY_PRINT));
 
         // Ensure the bootstrap/cache directory exists and is writable
         $bootstrapCachePath = base_path('bootstrap/cache');
+
+        // Create the bootstrap cache directory if it does not exist
         if (!File::exists($bootstrapCachePath)) {
             File::makeDirectory($bootstrapCachePath, 0755, true);
         }
@@ -134,9 +176,6 @@ class ModuleController extends Controller
                 // Register the new module in the modules_statuses.json file
                 $modules[$fileName] = false;
                 File::put(base_path('modules_statuses.json'), json_encode($modules, JSON_PRETTY_PRINT));
-
-                // Wait for a about seconds to ensure composer dump-autoload completes
-                sleep(5);
 
                 return redirect()->route('modules.index')->with('success', 'Module uploaded successfully. Please install it to use it');
             } else {

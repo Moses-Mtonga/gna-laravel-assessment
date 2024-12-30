@@ -65,13 +65,13 @@
                     {{ $tabNames[$routeName] ?? 'Dashboard' }}
                 </h3>
             </div>
-            <div>  
-                <a href="#" class="btn btn-outline-secondary btn-sm">{{ auth()->user()->name }}</a>  
-                <a href="{{ route('logout') }}" class="btn btn-outline-secondary btn-sm" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>  
-            
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">  
-                    @csrf  
-                </form>  
+            <div>
+                <a href="#" class="btn btn-outline-secondary btn-sm">{{ auth()->user()->name }}</a>
+                <a href="{{ route('logout') }}" class="btn btn-outline-secondary btn-sm" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </div>
         </div>
         <div class="content">

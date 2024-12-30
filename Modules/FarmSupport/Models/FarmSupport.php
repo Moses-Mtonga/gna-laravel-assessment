@@ -17,7 +17,7 @@ class FarmSupport extends Model
     }
 
     public function products()
-{
-    return $this->belongsToMany(SupportedProduct::class, 'farm_support_products');
-}
+    {
+        return $this->belongsToMany(SupportedProduct::class, 'farm_support_products', 'farm_support_id', 'product_id');
+    }
 }

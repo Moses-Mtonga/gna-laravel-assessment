@@ -1,8 +1,8 @@
-@extends('layouts.dashboard')
+@extends('layouts.main')
 
 @section('content')
     <div class="container mt-4">
-        <div class="container mt-4">
+        <div class="container">
             <div class="row ">
                 <div class="col-md-3">
                     <a href="#" class="text-decoration-none">
@@ -99,7 +99,7 @@
                         <tbody>
                             @foreach ($farmers as $farmer)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td> 
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>{{ $farmer->first_name }}</td>
                                     <td>{{ $farmer->last_name }}</td>
                                     <td>{{ $farmer->phone }}</td>
@@ -110,7 +110,8 @@
                                             class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirmDelete(event, '{{ $farmer->first_name }} {{ $farmer->last_name }}')">Delete</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -158,6 +159,71 @@
                     </div>
                 </div>
             </div>
+            <!-- Edit Farmer Modal -->
+            @foreach ($farmers as $farmer)
+                <div class="modal fade" id="editFarmerModal{{ $farmer->id }}" tabindex="-1"
+                    aria-labelledby="editFarmerModalLabel{{ $farmer->id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editFarmerModalLabel{{ $farmer->id }}">Edit Farmer</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{ route('farmers.update', $farmer->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="mb-3">
+                                        <label for="first_name{{ $farmer->id }}" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="first_name{{ $farmer->id }}"
+                                            name="first_name" value="{{ $farmer->first_name }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="last_name{{ $farmer->id }}" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="last_name{{ $farmer->id }}"
+                                            name="last_name" value="{{ $farmer->last_name }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="location{{ $farmer->id }}" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="location{{ $farmer->id }}"
+                                            name="location" value="{{ $farmer->location }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phone{{ $farmer->id }}" class="form-label">Phone</label>
+                                        <input type="text" class="form-control" id="phone{{ $farmer->id }}"
+                                            name="phone" value="{{ $farmer->phone }}" required>
+                                    </div>
+
+                                    <button type="submit" class="create-button btn btn-sm">
+                                        <span class="material-icons">add</span> save changes
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+
         </div>
     </div>
+
+    <script>
+        function confirmDelete(event, farmer) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Do you want to delete ${farmer} from the system?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete!',
+                cancelButtonText: 'No, cancel',
+                heightAuto: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.target.closest('form').submit();
+                }
+            });
+        }
+    </script>
 @endsection

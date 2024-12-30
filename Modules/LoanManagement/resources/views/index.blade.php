@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.main')
 
 @section('content')
     <div class="container mt-4">
@@ -25,7 +25,7 @@
             <tbody>
                 @foreach ($loans as $loan)
                     <tr>
-                        <td>{{ $loop->iteration }}</td> 
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ $loan->farmer->first_name . ' ' . $loan->farmer->last_name ?? '' }}</td>
                         <td>{{ $loan->amount }}</td>
                         <td>{{ $loan->interest_rate }}</td>
@@ -129,7 +129,7 @@
                     </div>
                 @endforeach
             </tbody>
-            
+
         </table>
         {{ $loans->links('pagination::bootstrap-5') }}
     </div>

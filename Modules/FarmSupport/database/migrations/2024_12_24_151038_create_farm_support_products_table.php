@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('farm_support_id');
             $table->unsignedBigInteger('product_id');
             $table->foreign('farm_support_id')->references('id')->on('farm_supports')->onDelete('cascade');
-            $table->foreign('supported_product_id')->references('id')->on('supported_products')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('supported_products')->onDelete('cascade');
         });
     }
 
